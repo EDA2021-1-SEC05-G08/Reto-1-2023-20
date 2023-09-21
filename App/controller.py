@@ -22,7 +22,6 @@
 
 import config as cf
 import model
-import time
 import csv
 
 csv.field_size_limit(2147483647)
@@ -38,15 +37,24 @@ def new_controller():
     """
     return model.new_controller()
 
+def load_data(catalog):
 
-def load_resultados (catalog):
+    catalog = load_resultados(catalog)
+    catalog = load_anotaciones(catalog)
+    catalog = load_penales(catalog)
+
+    return catalog
+
+
+def load_resultados(catalog):
     
     resultsfile = cf.data_dir + "results-utf8-"+ "small" + ".csv"
     input_file = csv.DictReader(open(resultsfile, encoding='utf-8'))
     
     for result in input_file:
-        model.add_results(catalog, result)
-    return model.results_size_resultados(catalog)
+        model.add_result(catalog, result)
+
+    return catalog
 
 
 def load_anotaciones (catalog):
@@ -55,8 +63,9 @@ def load_anotaciones (catalog):
     input_file = csv.DictReader(open(anotacionesfile, encoding='utf-8'))
     
     for anotacion in input_file:
-        model.add_anotaciones(catalog, anotacion)
-    return model.results_size_anotaciones(catalog)        
+        model.add_anotacion(catalog, anotacion)
+
+    return catalog     
 
 
 def load_penales (catalog):
@@ -65,15 +74,15 @@ def load_penales (catalog):
     input_file = csv.DictReader(open(penalesfile, encoding='utf-8'))
     
     for penal in input_file:
-        model.add_penales(catalog, penal)
-    return model.results_size_penales(catalog)
+        model.add_penal(catalog, penal)
+
+    return catalog
 
 
 def req_1(control):
     """
     Retorna el resultado del requerimiento 1
     """
-    model.req_1(control, 5, "g")
     pass
 
 
@@ -130,36 +139,3 @@ def req_8(control):
     """
     # TODO: Modificar el requerimiento 8
     pass
-
-def req_9(control,algoritmo):
-    """
-    Retorna el resultado del requerimiento 8
-    """
-    start = get_time()
-    print_final = model.req_9(control, algoritmo)
-    end = get_time()
-    delta_tiempo = delta_time(start, end)
-    return print_final, delta_tiempo
-    
-# Funciones para medir tiempos de ejecucion
-
-def print_req_9(catalog):
-    return model.print_req_9(catalog)
-
-def print_general(catalog):
-    return model.print_general(catalog)
-
-def get_time():
-    """
-    devuelve el instante tiempo de procesamiento en milisegundos
-    """
-    return float(time.perf_counter()*1000)
-
-
-def delta_time(start, end):
-    """
-    devuelve la diferencia entre tiempos de procesamiento muestreados
-    """
-    elapsed = float(end - start)
-    return elapsed
-
