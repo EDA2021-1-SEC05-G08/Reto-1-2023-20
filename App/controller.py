@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from DISClib.ADT import list as lt
 import config as cf
 import model
 import csv
@@ -43,12 +44,12 @@ def load_data(catalog):
     catalog, anotaciones_ordenadas = load_anotaciones(catalog)
     catalog, penales_ordenados = load_penales(catalog)
 
-    return catalog, resultados_ordenados, anotaciones_ordenadas, penales_ordenados
+    return catalog, model.getSize(resultados_ordenados), model.getTabla(resultados_ordenados), model.getSize(anotaciones_ordenadas), model.getTabla(anotaciones_ordenadas), model.getSize(penales_ordenados), model.getTabla(penales_ordenados)
 
 
 def load_resultados(catalog):
     
-    resultsfile = cf.data_dir + "results-utf8-"+ "small" + ".csv"
+    resultsfile = cf.data_dir + "resultados.csv"
     input_file = csv.DictReader(open(resultsfile, encoding='utf-8'))
     
     for result in input_file:
@@ -62,7 +63,7 @@ def load_resultados(catalog):
 
 def load_anotaciones (catalog):
     
-    anotacionesfile = cf.data_dir + "goalscorers-utf8-" + "small" + ".csv"
+    anotacionesfile = cf.data_dir + "anotaciones.csv"
     input_file = csv.DictReader(open(anotacionesfile, encoding='utf-8'))
     
     for anotacion in input_file:
@@ -76,7 +77,7 @@ def load_anotaciones (catalog):
 
 def load_penales (catalog):
     
-    penalesfile = cf.data_dir + "shootouts-utf8-" + "small" + ".csv"
+    penalesfile = cf.data_dir + "penales.csv"
     input_file = csv.DictReader(open(penalesfile, encoding='utf-8'))
     
     for penal in input_file:

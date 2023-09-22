@@ -67,9 +67,16 @@ def menu_cycle():
         eleccion = input('Seleccione una opción para continuar: ')
 
         if int(eleccion) == 1:
+            
             print("\nCargando información de los archivos...\n")
-            catalog, resultados_ordenados, anotaciones_ordenadas, penales_ordenados = controller.load_data(catalog)
-            print(penales_ordenados)
+            
+            catalog, resultdos_tamanio, resultados_tabla, anotaciones_tamanio, anotaciones_tabla, penales_tamanio, penales_tabla = controller.load_data(catalog)
+            print("Total de encuentros cargados: " + str(resultdos_tamanio))
+            print("Tres primeros y tres últimos partidos ordenados por la fecha del encuentro y por el puntaje final del partido:\n" + resultados_tabla + "\n")
+            print("Total de anotaciones cargadas: " + str(anotaciones_tamanio))
+            print("Tres primeras y tres últimas anotaciones ordenadas por la fecha del encuentro, minuto en que se anotó y nombre del jugador:\n" + anotaciones_tabla + "\n")
+            print("Total goles marcados desde el punto penal: " + str(penales_tamanio))
+            print("Tres primeras y tres últimas definiciones por penales ordenadas por el criterio compuesto de la fecha del encuentro y los nombres de los equipos involucrados:\n" + penales_tabla)
                     
         elif int(eleccion) == 2:
             pass

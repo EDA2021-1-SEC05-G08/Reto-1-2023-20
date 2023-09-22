@@ -24,8 +24,6 @@
  * Dario Correal - Version inicial
  """
 
-from datetime import datetime
-import time as time
 from DISClib.ADT import list as lt
 from DISClib.ADT import stack as st
 from DISClib.ADT import queue as qu
@@ -34,6 +32,11 @@ from DISClib.Algorithms.Sorting import insertionsort
 from DISClib.Algorithms.Sorting import selectionsort
 from DISClib.Algorithms.Sorting import mergesort
 from DISClib.Algorithms.Sorting import quicksort
+
+from datetime import datetime
+import time as time
+from tabulate import tabulate
+
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá
 dos listas, una para los videos, otra para las categorias de los mismos.
@@ -64,6 +67,13 @@ def add_result(catalog, resultado):
     return catalog
 
 def add_anotacion(catalog, anotacion):
+
+    if anotacion["scorer"] == "":
+        anotacion["scorer"] = "Desconocido"
+
+    if anotacion["minute"] == "":
+        anotacion["minute"] = -1
+
     lt.addLast(catalog['anotaciones'], anotacion)
     return catalog
 
@@ -236,17 +246,50 @@ def compare_equipos(penal_1, penal_2):
 # Funciones de ordenamiento
 
 def ordenar_resultados(resultados):
+
     resultados = mergesort.sort(resultados, compare_fechas)
     resultados = mergesort.sort(resultados, compare_puntajes)
+
+    primero = lt.getElement(resultados, 0)
+    lt.addLast(resultados, primero)
+
     return resultados
 
 def ordenar_anotaciones(anotaciones):
+
     anotaciones = mergesort.sort(anotaciones, compare_fechas)
     anotaciones = mergesort.sort(anotaciones, compare_minutos)
     anotaciones = mergesort.sort(anotaciones, compare_jugadores)
+
+    primero = lt.getElement(anotaciones, 0)
+    lt.addLast(anotaciones, primero)
+
     return anotaciones
 
 def ordenar_penales(penales):
+
     penales = mergesort.sort(penales, compare_fechas)
     penales = mergesort.sort(penales, compare_equipos)
+
+    primero = lt.getElement(penales, 0)
+    lt.addLast(penales, primero)
+
     return penales
+
+# Funciones de auxiliares
+
+def getSize(lista):
+    return lt.size(lista)-1
+
+def getTabla(lista):
+
+    headers = list(lt.getElement(lista, 0).keys())
+    data = []
+
+    for i in range(1, 4):
+        data.append(list(lt.getElement(lista, i).values()))
+
+    for i in range(getSize(lista)-2, lt.size(lista)):
+        data.append(list(lt.getElement(lista, i).values()))
+
+    return tabulate(data, headers)
