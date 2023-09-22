@@ -26,7 +26,7 @@ import controller
 assert cf
 
 default_limit = 10000
-sys.setrecursionlimit(default_limit * 10000)
+sys.setrecursionlimit(default_limit * 10)
 
 """
 La vista se encarga de la interacción con el usuario
@@ -68,7 +68,8 @@ def menu_cycle():
 
         if int(eleccion) == 1:
             print("\nCargando información de los archivos...\n")
-            catalog = controller.load_data(catalog)
+            catalog, resultados_ordenados, anotaciones_ordenadas, penales_ordenados = controller.load_data(catalog)
+            print(penales_ordenados)
                     
         elif int(eleccion) == 2:
             pass

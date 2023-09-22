@@ -39,11 +39,11 @@ def new_controller():
 
 def load_data(catalog):
 
-    catalog = load_resultados(catalog)
-    catalog = load_anotaciones(catalog)
-    catalog = load_penales(catalog)
+    catalog, resultados_ordenados = load_resultados(catalog)
+    catalog, anotaciones_ordenadas = load_anotaciones(catalog)
+    catalog, penales_ordenados = load_penales(catalog)
 
-    return catalog
+    return catalog, resultados_ordenados, anotaciones_ordenadas, penales_ordenados
 
 
 def load_resultados(catalog):
@@ -54,7 +54,10 @@ def load_resultados(catalog):
     for result in input_file:
         model.add_result(catalog, result)
 
-    return catalog
+    resultados = catalog["resultados"]
+    resultados = model.ordenar_resultados(resultados)
+
+    return catalog, resultados
 
 
 def load_anotaciones (catalog):
@@ -65,7 +68,10 @@ def load_anotaciones (catalog):
     for anotacion in input_file:
         model.add_anotacion(catalog, anotacion)
 
-    return catalog     
+    anotaciones = catalog["anotaciones"]
+    anotaciones = model.ordenar_anotaciones(anotaciones)
+
+    return catalog, anotaciones   
 
 
 def load_penales (catalog):
@@ -76,7 +82,10 @@ def load_penales (catalog):
     for penal in input_file:
         model.add_penal(catalog, penal)
 
-    return catalog
+    penales = catalog["penales"]
+    penales = model.ordenar_penales(penales)
+
+    return catalog, penales
 
 
 def req_1(control):

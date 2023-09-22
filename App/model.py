@@ -24,16 +24,16 @@
  * Dario Correal - Version inicial
  """
 
+from datetime import datetime
 import time as time
 from DISClib.ADT import list as lt
 from DISClib.ADT import stack as st
 from DISClib.ADT import queue as qu
-from DISClib.Algorithms.Sorting import shellsort as sa
-from DISClib.Algorithms.Sorting import insertionsort as ins
-from DISClib.Algorithms.Sorting import selectionsort as se
-from DISClib.Algorithms.Sorting import mergesort as merg
-from DISClib.Algorithms.Sorting import quicksort as quk
-
+from DISClib.Algorithms.Sorting import shellsort
+from DISClib.Algorithms.Sorting import insertionsort
+from DISClib.Algorithms.Sorting import selectionsort
+from DISClib.Algorithms.Sorting import mergesort
+from DISClib.Algorithms.Sorting import quicksort
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá
 dos listas, una para los videos, otra para las categorias de los mismos.
@@ -137,7 +137,7 @@ def req_8(catalog):
 
 # Funciones para comparación
 
-def compare_pais(resultado1, resultado2):
+def compare_paises(resultado1, resultado2):
 
     country1 = resultado1["country"]
     country2 = resultado2["country"]
@@ -148,23 +148,105 @@ def compare_pais(resultado1, resultado2):
         else: 
             return False 
 
-def compare_fechas(resultado1, resultado2):
+def compare_fechas(diccionario_1, diccionario_2):
 
-    resultado1 = resultado1["date"]
-    resultado2 = resultado2["date"]
+    fecha_1 = diccionario_1["date"] 
+    fecha_2 = diccionario_2["date"] 
+
+    fecha_1 = datetime.strptime(fecha_1, "%Y-%m-%d")
+    fecha_2 = datetime.strptime(fecha_2, "%Y-%m-%d")
     
-    year1 = resultado1.split("-")[0]
-    year2 = resultado2.split("-")[0]
-    month1 = resultado1.split("-")[1]
-    month2 = resultado2.split("-")[1]
-    day1 = resultado1.split("-")[2]
-    day2 = resultado2.split("-")[2]
-    
-    if year1 < year2:
-        return True
-    elif year1 == year2 and month1 < month2:
-        return True
-    elif year1 == year2 and month1 == month2 and day1 < day2:
+    if fecha_1 < fecha_2:
         return True
     else:
         return False
+    
+def compare_puntajes(resultado_1, resultado_2):
+
+    fecha_1 = resultado_1["date"]
+    puntaje_local_1 = resultado_1["home_score"]
+    puntaje_visitante_1 = resultado_1["away_score"]
+
+    fecha_2 = resultado_2["date"]
+    puntaje_local_2 = resultado_2["home_score"]
+    puntaje_visitante_2 = resultado_2["away_score"]
+
+    if fecha_1 == fecha_2:
+        if puntaje_local_1 > puntaje_local_2:
+            return True
+        elif puntaje_local_1 < puntaje_local_2:
+            return False
+        elif puntaje_local_1 == puntaje_local_2:
+            if puntaje_visitante_1 > puntaje_visitante_2:
+                return True
+            elif puntaje_visitante_1 <= puntaje_visitante_2:
+                return False
+    
+def compare_minutos(anotacion_1, anotacion_2):
+
+    fecha_1 = anotacion_1["date"]
+    minuto_1 = float(anotacion_1['minute'])
+
+    fecha_2 = anotacion_2["date"]
+    minuto_2 = float(anotacion_2['minute'])
+
+    if fecha_1 == fecha_2:
+        if minuto_1 < minuto_2:
+            return True
+        elif minuto_1 > minuto_2:
+            return False
+        
+def compare_jugadores(anotacion_1, anotacion_2):
+
+    fecha_1 = anotacion_1["date"]
+    minuto_1 = float(anotacion_1['minute'])
+    jugador_1 = anotacion_1['scorer']
+
+    fecha_2 = anotacion_2["date"]
+    minuto_2 = float(anotacion_2['minute'])
+    jugador_2 = anotacion_2['scorer']
+
+    if fecha_1 == fecha_2 and minuto_1 == minuto_2:
+        if jugador_1 < jugador_2:
+            return True
+        elif jugador_1 >= jugador_2:
+            return False
+
+def compare_equipos(penal_1, penal_2):
+
+    fecha_1 = penal_1["date"]
+    equipo_local_1 = penal_1['home_team']
+    equipo_visitante_1 = penal_1['away_team']
+
+    fecha_2 = penal_2["date"]
+    equipo_local_2 = penal_2['home_team']
+    equipo_visitante_2 = penal_2['away_team']
+
+    if fecha_1 == fecha_2:
+        if equipo_local_1 < equipo_local_2:
+            return True
+        elif equipo_local_1 > equipo_local_2:
+            return False
+        elif equipo_local_1 == equipo_local_2:
+            if equipo_visitante_1 < equipo_visitante_2:
+                return True
+            elif equipo_visitante_1 >= equipo_visitante_2:
+                return False
+
+# Funciones de ordenamiento
+
+def ordenar_resultados(resultados):
+    resultados = mergesort.sort(resultados, compare_fechas)
+    resultados = mergesort.sort(resultados, compare_puntajes)
+    return resultados
+
+def ordenar_anotaciones(anotaciones):
+    anotaciones = mergesort.sort(anotaciones, compare_fechas)
+    anotaciones = mergesort.sort(anotaciones, compare_minutos)
+    anotaciones = mergesort.sort(anotaciones, compare_jugadores)
+    return anotaciones
+
+def ordenar_penales(penales):
+    penales = mergesort.sort(penales, compare_fechas)
+    penales = mergesort.sort(penales, compare_equipos)
+    return penales
