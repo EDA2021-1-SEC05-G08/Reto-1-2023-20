@@ -234,6 +234,9 @@ def req_4(catalog, torneo, fecha_inicial, fecha_final):
 
             lt.addLast(partidos, partido)
 
+    partidos = mergesort.sort(partidos, compare_paises)
+    partidos = mergesort.sort(partidos, compare_ciudades)
+
     return partidos, lt.size(partidos), lt.size(paises), lt.size(ciudades), definidos_penales
 
 
@@ -365,6 +368,22 @@ def compare_equipos(penal_1, penal_2):
                 return True
             elif equipo_visitante_1 >= equipo_visitante_2:
                 return False
+
+def compare_ciudades(resultado_1, resultado_2):
+
+    fecha_1 = resultado_1["date"]
+    fecha_2 = resultado_2["date"]
+    country_1 = resultado_1["country"]
+    country_2 = resultado_2["country"]
+    city_1 = resultado_1["city"]
+    city_2 = resultado_2["city"]
+
+    if fecha_1 == fecha_2 and country_1 == country_2:
+        if city_1 < city_2:
+            return True
+        else: 
+            return False 
+
 
 # Funciones de ordenamiento
 
