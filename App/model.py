@@ -90,6 +90,7 @@ def req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo):
 
     resultados = catalog['resultados']
     pos = lt.size(resultados)-1
+    cantidad_total = 0
 
     partidos = lt.newList("ARRAY_LIST")
     if condicion_equipo == 1:
@@ -98,15 +99,19 @@ def req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo):
         condicion_equipo = "away_team"
     elif condicion_equipo == 3:
         condicion_equipo = "indiferente"
-    while lt.size(partidos) < numero_partidos and pos > 0:
+    while pos > 0:
         partido = lt.getElement(resultados, pos)
         if condicion_equipo == "indiferente" and (partido["home_team"] == nombre_equipo or partido["away_team"] == nombre_equipo):
-            lt.addFirst(partidos, partido)
+            cantidad_total += 1
+            if lt.size(partidos) < numero_partidos:
+                lt.addFirst(partidos, partido)
         elif condicion_equipo != "indiferente" and partido[condicion_equipo] == nombre_equipo:
-            lt.addFirst(partidos, partido)
+            cantidad_total += 1
+            if lt.size(partidos) < numero_partidos:
+                lt.addFirst(partidos, partido)
         pos-=1
 
-    return partidos
+    return partidos, cantidad_total, lt.size(partidos), condicion_equipo
         
 
 def req_2(catalog):

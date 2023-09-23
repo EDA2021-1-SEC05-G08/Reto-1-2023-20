@@ -82,10 +82,14 @@ def menu_cycle():
             nombre_equipo = input("Digite el nombre del equipo sobre el que desea hacer la consulta: ")
             numero_partidos = int(input("Digite la cantidad de partidos que desea conocer: "))
             condicion_equipo = int(input("Digite la condición del equipo en los partidos:\n1.Local\n2.Visitante\n3.Indiferente\n"))
-            print("\n" + controller.req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo))
+            respuesta = controller.req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo)
+            print("\n" + "Del total de " + str(respuesta[1]) + " partidos que se encontraron del equipo " + nombre_equipo + " en condición " + respuesta[3] + " estos son los registros más antiguos y recientes entoncontrados (si son más de seis, se muestran los primeros y ultimos tres):\n\n" + respuesta[0])
             
         elif int(eleccion) == 3:
-            pass
+            nombre_jugador = input("Digite el nombre del jugador sobre el que desea hacer la consulta: ")
+            numero_partidos = int(input("Digite la cantidad de goles que desea conocer: "))
+            condicion_equipo = int(input("Digite la condición del equipo en los partidos:\n1.Local\n2.Visitante\n3.Indiferente\n"))
+            print("\n" + controller.req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo))
 
         elif int(eleccion) == 4:
             pass

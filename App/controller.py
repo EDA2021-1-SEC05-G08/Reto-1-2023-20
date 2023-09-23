@@ -99,7 +99,8 @@ def req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo):
     """
     Retorna el resultado del requerimiento 1
     """
-    return model.getTabla(model.req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo))
+    respuesta = model.req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo)
+    return model.getTabla(respuesta[0]), respuesta[1], respuesta[2], respuesta[3]
 
 
 def req_2(control):
