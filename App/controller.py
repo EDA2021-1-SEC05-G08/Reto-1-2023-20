@@ -49,7 +49,7 @@ def load_data(catalog):
 
 def load_resultados(catalog):
     
-    resultsfile = cf.data_dir + "results-utf8-"+ "small" + ".csv"
+    resultsfile = cf.data_dir + "results-utf8-"+ "large" + ".csv"
     #resultsfile = cf.data_dir + "resultados.csv"
     input_file = csv.DictReader(open(resultsfile, encoding='utf-8'))
     
@@ -65,7 +65,7 @@ def load_resultados(catalog):
 
 def load_anotaciones (catalog):
     
-    anotacionesfile = cf.data_dir + "goalscorers-utf8-" + "small" + ".csv"
+    anotacionesfile = cf.data_dir + "goalscorers-utf8-" + "large" + ".csv"
     #anotacionesfile = cf.data_dir + "anotaciones.csv"
     input_file = csv.DictReader(open(anotacionesfile, encoding='utf-8'))
     
@@ -81,7 +81,7 @@ def load_anotaciones (catalog):
 
 def load_penales (catalog):
     
-    penalesfile = cf.data_dir + "shootouts-utf8-" + "small" + ".csv"
+    penalesfile = cf.data_dir + "shootouts-utf8-" + "large" + ".csv"
     #penalesfile = cf.data_dir + "penales.csv"
     input_file = csv.DictReader(open(penalesfile, encoding='utf-8'))
     
@@ -103,20 +103,20 @@ def req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo):
     return model.getTabla(respuesta[0]), respuesta[1], respuesta[2], respuesta[3]
 
 
-def req_2(control):
+def req_2(catalog, nombre_jugador, numero_goles):
     """
     Retorna el resultado del requerimiento 2
     """
-    # TODO: Modificar el requerimiento 2
-    pass
+    resultado = model.req_2(catalog, nombre_jugador, numero_goles)
+    return model.getTabla(resultado[0]), resultado[1] 
 
 
-def req_3(control):
+def req_3(catalog, equipo_nombre, fecha_inicial, fecha_final):
     """
     Retorna el resultado del requerimiento 3
     """
-    # TODO: Modificar el requerimiento 3
-    pass
+    resultado = model.req_3(catalog, equipo_nombre, fecha_inicial, fecha_final)
+    return model.getTabla(resultado[0]), resultado[1], resultado[2], resultado[3]
 
 
 def req_4(control):

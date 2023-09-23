@@ -99,12 +99,16 @@ def req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo):
         condicion_equipo = "away_team"
     elif condicion_equipo == 3:
         condicion_equipo = "indiferente"
+
     while pos > 0:
+
         partido = lt.getElement(resultados, pos)
+
         if condicion_equipo == "indiferente" and (partido["home_team"] == nombre_equipo or partido["away_team"] == nombre_equipo):
             cantidad_total += 1
             if lt.size(partidos) < numero_partidos:
                 lt.addFirst(partidos, partido)
+
         elif condicion_equipo != "indiferente" and partido[condicion_equipo] == nombre_equipo:
             cantidad_total += 1
             if lt.size(partidos) < numero_partidos:
@@ -114,28 +118,121 @@ def req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo):
     return partidos, cantidad_total, lt.size(partidos), condicion_equipo
         
 
-def req_2(catalog):
+def req_2(catalog, nombre_jugador, numero_goles):
     """
     Función que soluciona el requerimiento 2
     """
-    # TODO: Realizar el requerimiento 2
-    pass
+    
+    goles_lista= lt.newList("ARRAY_LIST")
+    goles_total = 0
 
+    anotaciones = catalog["anotaciones"]
 
-def req_3(catalog):
+    for pos in range (1, lt.size(anotaciones)):
+
+        anotacion = lt.getElement(anotaciones, pos)
+
+        if anotacion["scorer"] == nombre_jugador:
+            goles_total += 1
+            if lt.size(goles_lista) < numero_goles:
+                lt.addLast(goles_lista, anotacion)
+
+    return goles_lista, goles_total
+
+def req_3(catalog, equipo_nombre, fecha_inicial, fecha_final):
     """
     Función que soluciona el requerimiento 3
     """
-    # TODO: Realizar el requerimiento 3
-    pass
+
+    resultados = catalog['resultados']
+    anotaciones = catalog['anotaciones']
+    fecha_inicial = getFecha(fecha_inicial)
+    fecha_final = getFecha(fecha_final)
+
+    partidos = lt.newList("ARRAY_LIST")
+    cantidad_total = 0
+    cantidad_total_locales = 0
+    cantidad_total_visitantes = 0
+
+    for i in range(1, lt.size(resultados)):
+
+        partido = lt.getElement(resultados, i)
+        fecha_partido = getFecha(partido['date'])
 
 
-def req_4(catalog):
+        if fecha_inicial <= fecha_partido <= fecha_final and (partido["home_team"] == equipo_nombre or partido["away_team"] == equipo_nombre):
+
+            autogol = False
+            penalti = False
+
+            cantidad_total += 1
+            if partido["home_team"] == equipo_nombre:
+                cantidad_total_locales += 1
+            else:
+                cantidad_total_visitantes += 1
+
+            for j in range(1, lt.size(anotaciones)):
+                anotacion = lt.getElement(anotaciones, j)
+                anotacion_fecha = getFecha(anotacion['date'])
+                anotacion_local = anotacion['home_team']
+                anotacion_visitante = anotacion['away_team']
+                if anotacion_fecha == fecha_partido and (anotacion_local == equipo_nombre or anotacion_visitante == equipo_nombre):
+                    if not autogol and getBool(anotacion["own_goal"]):
+                        autogol = True
+                    if not penalti and getBool(anotacion["penalty"]):
+                        penalti = True
+
+            partido["penalty"] = penalti
+            partido["own_goal"] = autogol
+
+            lt.addLast(partidos, partido)
+
+    return partidos, cantidad_total, cantidad_total_locales, cantidad_total_visitantes
+
+
+def req_4(catalog, torneo, fecha_inicial, fecha_final):
     """
     Función que soluciona el requerimiento 4
     """
-    # TODO: Realizar el requerimiento 4
-    pass
+
+    resultados = catalog['resultados']
+    penales = catalog['penales']
+    fecha_inicial = getFecha(fecha_inicial)
+    fecha_final = getFecha(fecha_final)
+
+    partidos = lt.newList("ARRAY_LIST")
+    paises = lt.newList("ARRAY_LIST")
+    ciudades = lt.newList("ARRAY_LIST")
+    definidos_penales = 0
+
+    for i in range(1, lt.size(resultados)):
+
+        partido = lt.getElement(resultados, i)
+        fecha_partido = getFecha(partido['date'])
+
+
+        if fecha_inicial <= fecha_partido <= fecha_final and partido["tournament"] == torneo:
+
+            lt.addLast(partidos, partido)
+            if partido
+
+            for j in range(1, lt.size(anotaciones)):
+                anotacion = lt.getElement(anotaciones, j)
+                anotacion_fecha = getFecha(anotacion['date'])
+                anotacion_local = anotacion['home_team']
+                anotacion_visitante = anotacion['away_team']
+                if anotacion_fecha == fecha_partido and (anotacion_local == equipo_nombre or anotacion_visitante == equipo_nombre):
+                    if not autogol and getBool(anotacion["own_goal"]):
+                        autogol = True
+                    if not penalti and getBool(anotacion["penalty"]):
+                        penalti = True
+
+            partido["penalty"] = penalti
+            partido["own_goal"] = autogol
+
+            lt.addLast(partidos, partido)
+
+    return partidos, cantidad_total, cantidad_total_locales, cantidad_total_visitantes
 
 
 def req_5(catalog):
@@ -320,7 +417,13 @@ def getTabla(lista):
         for i in range(1, 4):
             data.append(list(lt.getElement(lista, i).values()))
 
-        for i in range(getSize(lista)-2, lt.size(lista)):
+        for i in range(getSize(lista)-1, lt.size(lista)+1):
             data.append(list(lt.getElement(lista, i).values()))
 
     return tabulate(data, headers)
+
+def getFecha(fecha):
+    return datetime.strptime(fecha , "%Y-%m-%d")
+
+def getBool(string):
+    return True if string == 'True' else False

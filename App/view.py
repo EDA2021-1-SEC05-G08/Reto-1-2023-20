@@ -37,17 +37,17 @@ operación solicitada
 
 def print_menu():
 
-    print("\n1- Cargar información")
-    print("2- Listar los últimos N partidos de un equipo segun su condición")
-    print("3- Listar los primeros N goles anotados por un jugador")
-    print("4- Consultar los partidos que disputó un equipo durante un periodo específico")
-    print("5- Consultar los partidos relacionados con un torneo durante un periodo específico")
-    print("6- Consultar las anotaciones de un jugador durante un periodo específico")
-    print("7- Clasificar los N mejores equipos de un torneo en un periodo específico")
-    print("8- Clasificar los N mejores anotadores en partidos oficiales dentro de un periodo específico")
-    print("9- Comparar el desempeño histórico de dos selecciones en torneos oficiales")
-    print("10- Ordenar la información de acuerdo al algoritmo de ordenamiento requerido")
-    print("0- Salir\n")
+    print("\n0- Cargar información")
+    print("1- Listar los últimos N partidos de un equipo segun su condición")
+    print("2- Listar los primeros N goles anotados por un jugador")
+    print("3- Consultar los partidos que disputó un equipo durante un periodo específico")
+    print("4- Consultar los partidos relacionados con un torneo durante un periodo específico")
+    print("5- Consultar las anotaciones de un jugador durante un periodo específico")
+    print("6- Clasificar los N mejores equipos de un torneo en un periodo específico")
+    print("7- Clasificar los N mejores anotadores en partidos oficiales dentro de un periodo específico")
+    print("8- Comparar el desempeño histórico de dos selecciones en torneos oficiales")
+    print("9- Ordenar la información de acuerdo al algoritmo de ordenamiento requerido")
+    print("10- Salir\n")
 
 def menu_cycle(): 
     
@@ -66,7 +66,7 @@ def menu_cycle():
 
         eleccion = input('Seleccione una opción para continuar: ')
 
-        if int(eleccion) == 1:
+        if int(eleccion) == 0:
             
             print("\nCargando información de los archivos...\n")
             
@@ -78,25 +78,36 @@ def menu_cycle():
             print("Total goles marcados desde el punto penal: " + str(penales_tamanio))
             print("Tres primeras y tres últimas definiciones por penales ordenadas por el criterio compuesto de la fecha del encuentro y los nombres de los equipos involucrados:\n" + penales_tabla)
                     
-        elif int(eleccion) == 2:
+        elif int(eleccion) == 1:
             nombre_equipo = input("Digite el nombre del equipo sobre el que desea hacer la consulta: ")
             numero_partidos = int(input("Digite la cantidad de partidos que desea conocer: "))
             condicion_equipo = int(input("Digite la condición del equipo en los partidos:\n1.Local\n2.Visitante\n3.Indiferente\n"))
             respuesta = controller.req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo)
             print("\n" + "Del total de " + str(respuesta[1]) + " partidos que se encontraron del equipo " + nombre_equipo + " en condición " + respuesta[3] + " estos son los registros más antiguos y recientes entoncontrados (si son más de seis, se muestran los primeros y ultimos tres):\n\n" + respuesta[0])
             
-        elif int(eleccion) == 3:
+        elif int(eleccion) == 2:
             nombre_jugador = input("Digite el nombre del jugador sobre el que desea hacer la consulta: ")
-            numero_partidos = int(input("Digite la cantidad de goles que desea conocer: "))
-            condicion_equipo = int(input("Digite la condición del equipo en los partidos:\n1.Local\n2.Visitante\n3.Indiferente\n"))
-            print("\n" + controller.req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo))
+            numero_goles = int(input("Digite la cantidad de primeros n goles que desea conocer del jugador: "))
+            respuesta = controller.req_2(catalog, nombre_jugador, numero_goles)
+            print("\n" + "Del total de " + str(respuesta[1]) + " goles anotados por el jugador " + nombre_jugador + " estos son los registros más antiguos y recientes entoncontrados (si son más de seis, se muestran los primeros y ultimos tres):\n\n" + respuesta[0])
+
+        elif int(eleccion) == 3:
+            nombre_equipo = input("Digite el nombre del equipo sobre el que desea hacer la consulta: ")
+            fecha_inicial = input("Digite la fecha inicial del periodo a consultar (con formato %Y-%m-%d): ")
+            fecha_final = input("Digite la fecha inicial del periodo a consultar (con formato %Y-%m-%d): ")
+            respuesta = controller.req_3(catalog, nombre_equipo, fecha_inicial, fecha_final)
+            print("\n" + "Del total de " + str(respuesta[1]) + " partidos jugados por el equipo " + nombre_equipo + " entre " + fecha_inicial + " y " + fecha_final + " " + str(respuesta[2]) + " son como equipo local y " + str(respuesta[3]) + " son como equipo visitante." + " Estos son los registros más antiguos y recientes entoncontrados (si son más de seis, se muestran los primeros y ultimos tres):\n\n" + respuesta[0])
 
         elif int(eleccion) == 4:
+            nombre_torneo = input("Digite el nombre del torneos sobre el que desea hacer la consulta: ")
+            fecha_inicial = input("Digite la fecha inicial del periodo a consultar (con formato %Y-%m-%d): ")
+            fecha_final = input("Digite la fecha inicial del periodo a consultar (con formato %Y-%m-%d): ")
+            respuesta = controller.req_3(catalog, nombre_equipo, fecha_inicial, fecha_final)
+            print("\n" + "Del total de " + str(respuesta[1]) + " partidos jugados por el equipo " + nombre_equipo + " entre " + fecha_inicial + " y " + fecha_final + " " + str(respuesta[2]) + " son como equipo local y " + str(respuesta[3]) + " son como equipo visitante." + " Estos son los registros más antiguos y recientes entoncontrados (si son más de seis, se muestran los primeros y ultimos tres):\n\n" + respuesta[0])
+        
+        elif int(eleccion) == 5:
             pass
 
-        elif int(eleccion) == 5:
-           pass
-        
         elif int(eleccion) == 6:
             pass
 
@@ -110,9 +121,6 @@ def menu_cycle():
             pass
 
         elif int(eleccion) == 10:
-            pass
-
-        elif int(eleccion) == 0:
             working = False
             print("\nGracias por utilizar el programa\n") 
             
