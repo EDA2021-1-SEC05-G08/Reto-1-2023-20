@@ -213,26 +213,28 @@ def req_4(catalog, torneo, fecha_inicial, fecha_final):
 
         if fecha_inicial <= fecha_partido <= fecha_final and partido["tournament"] == torneo:
 
+            if not lt.isPresent(paises, partido['country']):
+                lt.addLast(paises, partido['country'])
+            if not lt.isPresent(ciudades, partido['city']):
+                lt.addLast(ciudades, partido['city'])
+
+            partido_local = partido['home_team']
+            partido_visitante = partido['away_team']
+            partido["definido en penales"] = False
+            partido["ganador en penales"] = "No aplica"
+            for j in range(1, lt.size(penales)):
+                tiempo_penal = lt.getElement(penales, j)
+                tiempo_penal_fecha = getFecha(tiempo_penal['date'])
+                tiempo_penal_local = tiempo_penal['home_team']
+                tiempo_penal_visitante = tiempo_penal['away_team']
+                if tiempo_penal_fecha == fecha_partido and partido_local == tiempo_penal_local and partido_visitante == tiempo_penal_visitante:
+                    partido["definido en penales"] = True
+                    partido["ganador en penales"] = tiempo_penal['winner']
+                    definidos_penales += 1
+
             lt.addLast(partidos, partido)
-            if partido
 
-            for j in range(1, lt.size(anotaciones)):
-                anotacion = lt.getElement(anotaciones, j)
-                anotacion_fecha = getFecha(anotacion['date'])
-                anotacion_local = anotacion['home_team']
-                anotacion_visitante = anotacion['away_team']
-                if anotacion_fecha == fecha_partido and (anotacion_local == equipo_nombre or anotacion_visitante == equipo_nombre):
-                    if not autogol and getBool(anotacion["own_goal"]):
-                        autogol = True
-                    if not penalti and getBool(anotacion["penalty"]):
-                        penalti = True
-
-            partido["penalty"] = penalti
-            partido["own_goal"] = autogol
-
-            lt.addLast(partidos, partido)
-
-    return partidos, cantidad_total, cantidad_total_locales, cantidad_total_visitantes
+    return partidos, lt.size(partidos), lt.size(paises), lt.size(ciudades), definidos_penales
 
 
 def req_5(catalog):

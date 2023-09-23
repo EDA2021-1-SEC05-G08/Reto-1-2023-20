@@ -99,11 +99,11 @@ def menu_cycle():
             print("\n" + "Del total de " + str(respuesta[1]) + " partidos jugados por el equipo " + nombre_equipo + " entre " + fecha_inicial + " y " + fecha_final + " " + str(respuesta[2]) + " son como equipo local y " + str(respuesta[3]) + " son como equipo visitante." + " Estos son los registros más antiguos y recientes entoncontrados (si son más de seis, se muestran los primeros y ultimos tres):\n\n" + respuesta[0])
 
         elif int(eleccion) == 4:
-            nombre_torneo = input("Digite el nombre del torneos sobre el que desea hacer la consulta: ")
+            nombre_torneo = input("Digite el nombre del torneo sobre el que desea hacer la consulta: ")
             fecha_inicial = input("Digite la fecha inicial del periodo a consultar (con formato %Y-%m-%d): ")
             fecha_final = input("Digite la fecha inicial del periodo a consultar (con formato %Y-%m-%d): ")
-            respuesta = controller.req_3(catalog, nombre_equipo, fecha_inicial, fecha_final)
-            print("\n" + "Del total de " + str(respuesta[1]) + " partidos jugados por el equipo " + nombre_equipo + " entre " + fecha_inicial + " y " + fecha_final + " " + str(respuesta[2]) + " son como equipo local y " + str(respuesta[3]) + " son como equipo visitante." + " Estos son los registros más antiguos y recientes entoncontrados (si son más de seis, se muestran los primeros y ultimos tres):\n\n" + respuesta[0])
+            respuesta = controller.req_4(catalog, nombre_torneo, fecha_inicial, fecha_final)
+            print("\n" + "En el torneo " + nombre_torneo + " entre las fechas " + fecha_inicial + " y " + fecha_final + " se vieron involucrados " + str(respuesta[1]) + " partidos, " + str(respuesta[2]) + " paises, " + str(respuesta[3]) + " ciudades y " + str(respuesta[3]) + " partidos definidos por penales." + " Estos son los registros más antiguos y recientes entoncontrados (si son más de seis, se muestran los primeros y ultimos tres):\n\n" + respuesta[0])
         
         elif int(eleccion) == 5:
             pass
