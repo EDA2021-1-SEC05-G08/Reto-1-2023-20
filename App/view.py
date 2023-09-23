@@ -79,7 +79,10 @@ def menu_cycle():
             print("Tres primeras y tres últimas definiciones por penales ordenadas por el criterio compuesto de la fecha del encuentro y los nombres de los equipos involucrados:\n" + penales_tabla)
                     
         elif int(eleccion) == 2:
-            pass
+            nombre_equipo = input("Digite el nombre del equipo sobre el que desea hacer la consulta: ")
+            numero_partidos = int(input("Digite la cantidad de partidos que desea conocer: "))
+            condicion_equipo = int(input("Digite la condición del equipo en los partidos:\n1.Local\n2.Visitante\n3.Indiferente\n"))
+            print("\n" + controller.req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo))
             
         elif int(eleccion) == 3:
             pass

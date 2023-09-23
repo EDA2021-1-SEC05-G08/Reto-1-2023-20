@@ -83,12 +83,31 @@ def add_penal(catalog, penal):
 
 # Funciones de consulta
 
-def req_1(catalog):
+def req_1(catalog, numero_partidos, nombre_equipo, condicion_equipo):
     """
     Función que soluciona el requerimiento 1
     """
-    # TODO: Realizar el requerimiento 1
-    pass
+
+    resultados = catalog['resultados']
+    pos = lt.size(resultados)-1
+
+    partidos = lt.newList("ARRAY_LIST")
+    if condicion_equipo == 1:
+        condicion_equipo = "home_team"
+    elif condicion_equipo == 2:
+        condicion_equipo = "away_team"
+    elif condicion_equipo == 3:
+        condicion_equipo = "indiferente"
+    while lt.size(partidos) < numero_partidos and pos > 0:
+        partido = lt.getElement(resultados, pos)
+        if condicion_equipo == "indiferente" and (partido["home_team"] == nombre_equipo or partido["away_team"] == nombre_equipo):
+            lt.addFirst(partidos, partido)
+        elif condicion_equipo != "indiferente" and partido[condicion_equipo] == nombre_equipo:
+            lt.addFirst(partidos, partido)
+        pos-=1
+
+    return partidos
+        
 
 def req_2(catalog):
     """
@@ -286,10 +305,17 @@ def getTabla(lista):
     headers = list(lt.getElement(lista, 0).keys())
     data = []
 
-    for i in range(1, 4):
-        data.append(list(lt.getElement(lista, i).values()))
+    if lt.size(lista) < 6:
 
-    for i in range(getSize(lista)-2, lt.size(lista)):
-        data.append(list(lt.getElement(lista, i).values()))
+        for i in range(lt.size(lista)):
+            data.append(list(lt.getElement(lista, i).values()))
+
+    else:
+
+        for i in range(1, 4):
+            data.append(list(lt.getElement(lista, i).values()))
+
+        for i in range(getSize(lista)-2, lt.size(lista)):
+            data.append(list(lt.getElement(lista, i).values()))
 
     return tabulate(data, headers)
