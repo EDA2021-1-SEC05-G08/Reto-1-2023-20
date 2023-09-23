@@ -127,12 +127,12 @@ def req_4(catalog, torneo, fecha_inicial, fecha_final):
     return model.getTabla(resultado[0]), resultado[1], resultado[2], resultado[3], resultado[4]
 
 
-def req_5(control):
+def req_5(catalog, jugador_nombre, fecha_inicial, fecha_final):
     """
     Retorna el resultado del requerimiento 5
     """
-    # TODO: Modificar el requerimiento 5
-    pass
+    resultado = model.req_5(catalog, jugador_nombre, fecha_inicial, fecha_final)
+    return model.getTabla(resultado[0]), resultado[1], resultado[2], resultado[3], resultado[4]
 
 def req_6(control):
     """

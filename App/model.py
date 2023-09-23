@@ -240,12 +240,71 @@ def req_4(catalog, torneo, fecha_inicial, fecha_final):
     return partidos, lt.size(partidos), lt.size(paises), lt.size(ciudades), definidos_penales
 
 
-def req_5(catalog):
+def req_5(catalog, jugador_nombre, fecha_inicial, fecha_final):
     """
     Función que soluciona el requerimiento 5
     """
-    # TODO: Realizar el requerimiento 5
-    pass
+
+    resultados = catalog['resultados']
+    anotaciones = catalog['anotaciones']
+    fecha_inicial = getFecha(fecha_inicial)
+    fecha_final = getFecha(fecha_final)
+
+    jugador_anotaciones_lista = lt.newList("ARRAY_LIST")
+    jugador_torneos = lt.newList("ARRAY_LIST")
+    jugador_anotaciones = 0
+    jugador_anotaciones_nopenal = 0
+    jugador_anotaciones_penal = 0
+    jugador_anotaciones_autogol = 0
+
+    for i in range(1, lt.size(anotaciones)):
+
+        anotacion = lt.getElement(anotaciones, i)
+
+        anotacion_fecha = getFecha(anotacion['date'])
+        resultado_home_score = 0
+        resultado_away_score = 0
+        anotacion_penal = False
+        anotacion_autogol = False
+        anotacion_toreno = ""
+
+        if fecha_inicial <= anotacion_fecha <= fecha_final and anotacion["scorer"] == jugador_nombre:
+
+            jugador_anotaciones += 1
+            if getBool(anotacion['penalty']):
+                jugador_anotaciones_penal += 1
+                anotacion_penal = True
+            else:
+                jugador_anotaciones_nopenal += 1
+            if getBool(anotacion['own_goal']):
+                jugador_anotaciones_autogol += 1
+                anotacion_autogol = True
+
+            anotacion_local = anotacion['home_team']
+            anotacion_visitante = anotacion['away_team']
+            for j in range(1, lt.size(resultados)):
+                resultado = lt.getElement(resultados, j)
+                resultado_fecha = getFecha(resultado['date'])
+                resultado_local = resultado['home_team']
+                resultado_visitante = resultado['away_team']
+                if resultado_fecha == anotacion_fecha and resultado_local == anotacion_local and resultado_visitante == anotacion_visitante:
+                    print("--")
+                    resultado_home_score = resultado['home_score']
+                    resultado_away_score = resultado['away_score']
+                    resultado_torneo = resultado['tournament']
+                    anotacion_toreno = resultado_torneo
+                    if not lt.isPresent(jugador_torneos, resultado_torneo):
+                        lt.addLast(jugador_torneos, resultado_torneo)
+
+            anotacion["home_score"] = resultado_home_score
+            anotacion["away_score"] = resultado_away_score
+            anotacion["tournament"] = anotacion_toreno
+            anotacion["penalty"] = anotacion_penal
+            anotacion["own_goal"] = anotacion_autogol
+
+            lt.addLast(jugador_anotaciones_lista, anotacion)
+
+    return jugador_anotaciones_lista, jugador_anotaciones, lt.size(jugador_torneos), jugador_anotaciones_penal, jugador_anotaciones_autogol
 
 
 def req_6(catalog):
