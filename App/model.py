@@ -307,12 +307,137 @@ def req_5(catalog, jugador_nombre, fecha_inicial, fecha_final):
     return jugador_anotaciones_lista, jugador_anotaciones, lt.size(jugador_torneos), jugador_anotaciones_penal, jugador_anotaciones_autogol
 
 
-def req_6(catalog):
+def req_6(catalog, equipos_cantidad, torneo_nombre, fecha_inicial, fecha_final):
     """
     Función que soluciona el requerimiento 6
     """
-    # TODO: Realizar el requerimiento 6
-    pass
+
+    resultados = catalog['resultados']
+    anotaciones = catalog['anotaciones']
+    fecha_inicial = getFecha(fecha_inicial)
+    fecha_final = getFecha(fecha_final)
+
+    equipos_informacion = {}
+    torneo_equipos = lt.newList("ARRAY_LIST")
+
+    for i in range(1, lt.size(resultados)):
+
+        resultado = lt.getElement(resultados, i)
+        if resultado['tournament'] == torneo_nombre and fecha_inicial <= getFecha(resultado['date']) <= fecha_final:
+            
+            if resultado['home_team'] not in equipos_informacion:
+                equipos_informacion[resultado['home_team']] = {
+                    'nombre': resultado['home_team'],
+                    'total_puntos': 0,
+                    'total_goles_positivos_penales': 0,
+                    'total_goles_positivos_nopenales': 0,
+                    'total_goles_negativos_autogoles': 0,
+                    'total_goles_negativos_noautogoles': 0,
+                    'total_victorias': 0,
+                    'total_empates': 0,
+                    'total_derrotas': 0,
+                    'jugadores_goles': {},
+                    'fechas': []
+                    }
+            equipos_informacion[resultado['home_team']]['fechas'].append(resultado['date'])
+            if resultado['home_score'] > resultado['away_score']:
+                equipos_informacion[resultado['home_team']]['total_puntos'] = equipos_informacion[resultado['home_team']]['total_puntos'] + 3
+                equipos_informacion[resultado['home_team']]['total_victorias'] = equipos_informacion[resultado['home_team']]['total_victorias'] + 1
+            elif resultado['home_score'] == resultado['away_score']:
+                equipos_informacion[resultado['home_team']]['total_puntos'] = equipos_informacion[resultado['home_team']]['total_puntos'] + 1
+                equipos_informacion[resultado['home_team']]['total_empates'] = equipos_informacion[resultado['home_team']]['total_empates'] + 1
+            elif resultado['home_score'] < resultado['away_score']:
+                equipos_informacion[resultado['home_team']]['total_derrotas'] = equipos_informacion[resultado['home_team']]['total_derrotas'] + 1
+
+            if resultado['away_team'] not in equipos_informacion:
+                equipos_informacion[resultado['away_team']] = {
+                    'nombre': resultado['away_team'],
+                    'total_puntos': 0,
+                    'total_goles_positivos_penales': 0,
+                    'total_goles_positivos_nopenales': 0,
+                    'total_goles_negativos_autogoles': 0,
+                    'total_goles_negativos_noautogoles': 0,
+                    'total_victorias': 0,
+                    'total_empates': 0,
+                    'total_derrotas': 0,
+                    'jugadores_goles': {},
+                    'fechas': []
+                    }
+            equipos_informacion[resultado['home_team']]['fechas'].append(resultado['date'])
+            if resultado['away_score'] > resultado['home_score']:
+                equipos_informacion[resultado['away_team']]['total_puntos'] = equipos_informacion[resultado['away_team']]['total_puntos'] + 3
+                equipos_informacion[resultado['away_team']]['total_victorias'] = equipos_informacion[resultado['away_team']]['total_victorias'] + 1
+            elif resultado['away_score'] == resultado['home_score']:
+                equipos_informacion[resultado['away_team']]['total_puntos'] = equipos_informacion[resultado['away_team']]['total_puntos'] + 1
+                equipos_informacion[resultado['away_team']]['total_empates'] = equipos_informacion[resultado['away_team']]['total_empates'] + 1
+            elif resultado['away_score'] < resultado['home_score']:
+                equipos_informacion[resultado['away_team']]['total_derrotas'] = equipos_informacion[resultado['away_team']]['total_derrotas'] + 1
+        else:
+
+            if resultado['home_team'] not in equipos_informacion:
+                equipos_informacion[resultado['home_team']] = {
+                    'nombre': resultado['home_team'],
+                    'total_puntos': 0,
+                    'total_goles_positivos_penales': 0,
+                    'total_goles_positivos_nopenales': 0,
+                    'total_goles_negativos_autogoles': 0,
+                    'total_goles_negativos_noautogoles': 0,
+                    'total_victorias': 0,
+                    'total_empates': 0,
+                    'total_derrotas': 0,
+                    'jugadores_goles': {},
+                    'fechas': []
+                    }
+                
+            if resultado['away_team'] not in equipos_informacion:
+                equipos_informacion[resultado['away_team']] = {
+                    'nombre': resultado['away_team'],
+                    'total_puntos': 0,
+                    'total_goles_positivos_penales': 0,
+                    'total_goles_positivos_nopenales': 0,
+                    'total_goles_negativos_autogoles': 0,
+                    'total_goles_negativos_noautogoles': 0,
+                    'total_victorias': 0,
+                    'total_empates': 0,
+                    'total_derrotas': 0,
+                    'jugadores_goles': {},
+                    'fechas': []
+                    }
+
+    for pos in range(1, lt.size(anotaciones)):
+        anotacion = lt.getElement(anotaciones, pos)
+        if fecha_inicial<= getFecha(anotacion['date']) <= fecha_final and anotacion['date'] in equipos_informacion[anotacion['home_team']]['fechas'] and anotacion['date'] in equipos_informacion[anotacion['away_team']]['fechas']:
+            if anotacion['team'] == anotacion['home_team']:
+                if not anotacion['scorer'] in equipos_informacion[anotacion['home_team']]['jugadores_goles']:
+                    equipos_informacion[anotacion['home_team']]['jugadores_goles'][anotacion['scorer']] = 0
+                print(anotacion['own_goal'])
+                if not getBool(anotacion['own_goal']):
+                    print("------")
+                    equipos_informacion[anotacion['home_team']]['jugadores_goles'][anotacion['scorer']] += 1
+                    equipos_informacion[anotacion['away_team']]['total_goles_negativos_noautogoles'] += 1
+                    if getBool(anotacion['penalty']):
+                        equipos_informacion[anotacion['home_team']]['total_goles_positivos_penales'] += 1
+                    else:
+                        equipos_informacion[anotacion['home_team']]['total_goles_positivos_nopenales'] += 1
+                else:
+                    equipos_informacion[anotacion['home_team']]['total_goles_negativos_autogoles'] += 1
+            
+            else:
+                if not anotacion['scorer'] in equipos_informacion[anotacion['away_team']]['jugadores_goles']:
+                    equipos_informacion[anotacion['away_team']]['jugadores_goles'][anotacion['scorer']] = 0
+                if not getBool(anotacion['own_goal']):
+                    equipos_informacion[anotacion['away_team']]['jugadores_goles'][anotacion['scorer']] += 1
+                    equipos_informacion[anotacion['home_team']]['total_goles_negativos_noautogoles'] += 1
+                    if getBool(anotacion['penalty']):
+                        equipos_informacion[anotacion['away_team']]['total_goles_positivos_penales'] += 1
+                    else:
+                        equipos_informacion[anotacion['away_team']]['total_goles_positivos_nopenales'] += 1
+                else:
+                    equipos_informacion[anotacion['away_team']]['total_goles_negativos_autogoles'] += 1
+
+    print(equipos_informacion['Brazil'])
+
+        
 
 
 def req_7(catalog):

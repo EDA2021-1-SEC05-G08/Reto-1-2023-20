@@ -113,7 +113,11 @@ def menu_cycle():
             print("\n" + "El jugador " + jugador_nombre + " entre las fechas " + fecha_inicial + " y " + fecha_final + " anotó " + str(respuesta[1]) + " goles en donde se vieron involucrados " + str(respuesta[2]) + " torneos, " + str(respuesta[3]) + " penales y " + str(respuesta[4]) + " autogoles." + " Estos son los registros más antiguos y recientes entoncontrados (si son más de seis, se muestran los primeros y ultimos tres):\n\n" + respuesta[0])
 
         elif int(eleccion) == 6:
-            pass
+            equipos_cantidad = input("Digite la cantidad de equipos que desea: ")
+            nombre_torneo = input("Digite el nombre del torneo sobre el que desea hacer la consulta: ")
+            fecha_inicial = input("Digite la fecha inicial del periodo a consultar (con formato %Y-%m-%d): ")
+            fecha_final = input("Digite la fecha inicial del periodo a consultar (con formato %Y-%m-%d): ")
+            controller.req_6(catalog, equipos_cantidad, nombre_torneo, fecha_inicial, fecha_final)
 
         elif int(eleccion) == 7:
             pass
